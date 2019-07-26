@@ -11,6 +11,7 @@ The end goal of this project is to train an algorithm to play tic-tac-toe better
 
 ## Run
 
+Compile the file `tictactapp.cpp` with your favorite C++ compiler and run it. 
 
 
 ## Tools
