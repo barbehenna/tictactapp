@@ -11,8 +11,7 @@ The end goal of this project is to train an algorithm to play tic-tac-toe better
 
 ## Run
 
-Compile the file `tictactapp.cpp` with your favorite C++ compiler and run it. 
-
+Cmake is set up for this project. Build it with `cmake .` followed by `make` and then run the executable `tictactapp` produced. 
 
 ## Tools
 
