@@ -4,4 +4,4 @@ Makefile
 CMakeFiles/*
 *.dylib
 
-tictactapp
+tictactapp_game

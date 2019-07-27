@@ -11,7 +11,7 @@ The end goal of this project is to train an algorithm to play tic-tac-toe better
 
 ## Run
 
-Cmake is set up for this project. Build it with `cmake .` followed by `make` and then run the executable `tictactapp` produced. 
+Cmake is set up for this project. Build it with `cmake .` followed by `make` and then run the executable `tictactapp_game` produced. 
 
 ## Tools
 

@@ -12,5 +12,5 @@ set(BOARD_FILES
 		Board/Board.h)
 
 add_library(tictac_app SHARED ${BOARD_FILES})
-add_executable(tictactapp tictactapp.cpp)
-target_link_libraries(tictactapp tictac_app)
+add_executable(tictactapp_game main_game.cpp)
+target_link_libraries(tictactapp_game tictac_app)
