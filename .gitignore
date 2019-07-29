@@ -3,5 +3,6 @@ CMakeCache.txt
 Makefile
 CMakeFiles/*
 *.dylib
+notebooks/.ipynb_checkpoints/*
 
 tictactapp_game
