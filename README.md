@@ -11,11 +11,15 @@ The end goal of this project is to train an algorithm to play tic-tac-toe better
 
 ## Run
 
-Cmake is set up for this project. Build it with `cmake .` followed by `make` and then run the executable `tictactapp_game` produced. 
+Cmake is set up for this project and I've added a `Makefile` for even more laziness! Build it with `make`, this will produce two libraries: one for just the board class (I think), and one with Boost.Python to allow the Board class to be used from Python 3.7. Additionally, the command line game is built for fun. 
 
 ## Tools
 
 The game will be built with C++ and standard libraries and the algorithm will be built and trained in Julia 1.1.1. This is because I like the language and am eager to learn it better. Additionally, it seems to have very good C++ integration and speed. 
 
 These tools are subject to change as I continue the project. 
+
+### August 8, 2018
+
+Because of the libraries available and for development speed, I'm changing gears to training in Python. I am using the Boost.Python library to allow the game to be accessed from Python. I plan to start training with Tensorflow 2.0 and Keras. The binary being built of just the Board class files should still be usable in Julia 1.1, should I switch back.  
 
