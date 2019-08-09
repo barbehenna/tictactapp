@@ -51,6 +51,10 @@ int Board::getTurn( void ) {
 	return turn;
 }
 
+GameBoard Board::getBoard( void ) {
+	return board;
+}
+
 bool Board::isBoardFull( void ) {
 	bool isFull = true;
 

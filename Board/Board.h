@@ -10,10 +10,13 @@
 #include <vector>
 
 
+typedef std::vector<std::vector<int> > GameBoard;
+
+
 // This class maintains the board state throughout the game.
 class Board {
 private:
-	std::vector<std::vector<int> > board;
+	GameBoard board;
 	int turn;
 
 public:
@@ -22,6 +25,7 @@ public:
 	int addMove(int player, int row, int col);
 	void nextTurn( void );
 	int getTurn( void );
+	GameBoard getBoard( void );
 	int whoWon( void );
 	bool isBoardFull( void );
 	void printBoard( void );
