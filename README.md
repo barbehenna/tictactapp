@@ -11,7 +11,7 @@ The end goal of this project is to train an algorithm to play tic-tac-toe better
 
 ## Run
 
-Cmake is set up for this project and I've added a `Makefile` for even more laziness! Build it with `make`, this will produce two libraries: one for just the board class (I think), and one with Boost.Python to allow the Board class to be used from Python 3.7. Additionally, the command line game is built for fun. 
+Cmake is set up for this project and I've added a `Makefile` for even more laziness! Build it with `make`, this will produce a library using Boost.Python to allow the Board class to be used from Python 3.7. Additionally, the command line game is built for fun. 
 
 ## Tools
 
