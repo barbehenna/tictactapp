@@ -8,6 +8,9 @@
 #include <iostream>
 #include <algorithm> // for std::fill
 #include <vector>
+#include <boost/python/numpy.hpp>
+
+namespace np = boost::python::numpy;
 
 
 typedef std::vector<std::vector<int> > GameBoard;
@@ -26,6 +29,7 @@ public:
 	void nextTurn( void );
 	int getTurn( void );
 	GameBoard getBoard( void );
+	np::ndarray getBoardnp( void );
 	int whoWon( void );
 	bool isBoardFull( void );
 	void printBoard( void );
