@@ -23,5 +23,13 @@ RUN julia -e 'using Pkg; Pkg.add.(["Cxx", "Flux", "IJulia", "POMDPs"])'
 # precompile packages (slightly faster load)
 RUN julia -e 'using Cxx; using Flux; using IJulia; using POMDPs'
 
+RUN julia -e 'using POMDPs;\
+	using Pkg;\
+	POMDPs.add_registry();\
+	Pkg.add.(["QuickPOMDPs", "POMDPSimulators", "QMDP", "POMDPSimulators", "POMDPModels"]);\
+	Pkg.clone("DeepQLearning");\
+	Pkg.build("DeepQLearning");'
+RUN julia -e 'using DeepQLearning; using POMDPModels; using POMDPSimulators; using QuickPOMDPs; using QMDP'
+
 # launch jupyter notebook
 CMD ["/usr/local/bin/jupyter-notebook", "--ip=0.0.0.0", "--allow-root", "--no-browser", "--NotebookApp.token=''"]

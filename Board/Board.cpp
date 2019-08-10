@@ -8,7 +8,22 @@
 #include <algorithm> // for std::fill
 #include <vector>
 
+#include <boost/python.hpp>
+#include <boost/python/numpy.hpp>
+namespace p = boost::python;
+namespace np = boost::python::numpy;
+
 using namespace std;
+
+
+template<typename T>
+std::vector<T> flatten(const std::vector<std::vector<T>> &orig)
+{   
+	std::vector<T> ret;
+	for(const auto &v: orig)
+		ret.insert(ret.end(), v.begin(), v.end());                                                                                         
+	return ret;
+} 
 
 
 Board::Board( void ) {
@@ -49,6 +64,34 @@ void Board::nextTurn( void ) {
 
 int Board::getTurn( void ) {
 	return turn;
+}
+
+GameBoard Board::getBoard( void ) {
+	return board;
+}
+
+np::ndarray Board::getBoardnp( void ) {
+	vector<int> resvec(flatten(board));
+	// cout << "resvec vector has size: " << resvec.size() << endl;
+	int* data = &resvec[0];
+
+	// np::dtype dt = np::dtype::get_builtin<int>();
+	// p::tuple shape = p::make_tuple(9);
+	// p::tuple stride = p::make_tuple(9);
+	// p::object own;
+	// np::ndarray data_np = np::from_data(data,dt,shape,stride,own);
+
+	p::tuple outshape = p::make_tuple(3, 3);
+	// np::dtype dtype = np::dtype::get_builtin<int>();
+	// np::ndarray a =  np::zeros(shape, dtype);
+
+
+	Py_intptr_t shape[1] = { static_cast<Py_intptr_t>(resvec.size()) };
+	np::ndarray resnp = np::zeros(1, shape, np::dtype::get_builtin<double>());
+	copy(resvec.begin(), resvec.end(), reinterpret_cast<double*>(resnp.get_data()));
+	
+	return resnp.reshape(outshape);
+	// return a;
 }
 
 bool Board::isBoardFull( void ) {

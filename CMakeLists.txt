@@ -13,7 +13,8 @@ find_package(PythonLibs ${PY_VERSION} REQUIRED)
 set(BOOST_VERSION 1.70.0)
 find_package(Boost ${BOOST_VERSION} REQUIRED COMPONENTS 
 	system 
-	python37)
+	python37
+	numpy37)
 
 include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
@@ -36,11 +37,6 @@ set(BOARD_FILES
 		Board/Board.cpp
 		Board/Board.h)
 
-# add_library(tictac_app SHARED ${BOARD_FILES})
-# target_link_libraries(tictactapp_game tictac_app)
-
-# add_library(Board SHARED Board/PythonBindings.cpp ${BOARD_FILES})
-# target_link_libraries(Board ${Boost_LIBRARIES} ${PROJECT_NAME})
 
 # Build Python Board library
 # Set up the libraries and header search paths for this target
