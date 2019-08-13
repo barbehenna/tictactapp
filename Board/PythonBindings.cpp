@@ -19,12 +19,11 @@ BOOST_PYTHON_MODULE(Board)
         .def(vector_indexing_suite<GameBoard>() );
     
     class_<Board>("Board")
-        .def("grcheckMoveValideet", &Board::checkMoveValid)
+        .def("checkMoveValid", &Board::checkMoveValid)
         .def("addMove", &Board::addMove)
         .def("nextTurn", &Board::nextTurn)
         .def("getTurn", &Board::getTurn)
         .def("getBoard", &Board::getBoard)
-        // .def("getBoard", getBoardnp)
         .def("getBoardnp", &Board::getBoardnp)
         .def("whoWon", &Board::whoWon)
         .def("isBoardFull", &Board::isBoardFull)
