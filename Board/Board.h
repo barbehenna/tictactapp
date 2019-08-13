@@ -10,25 +10,10 @@
 #include <vector>
 
 
-typedef std::vector<std::vector<int> > GameBoard;
-
-
-// Helper function
-// Converts 2d vectors to 1d vectors 
-// Found on Stack Overflow
-template<typename T>
-std::vector<T> flatten(const std::vector<std::vector<T>> &orig) {
-	std::vector<T> ret;
-	for(const auto &v: orig)
-		ret.insert(ret.end(), v.begin(), v.end());
-	return ret;
-} 
-
-
 // This class maintains the board state throughout the game.
 class Board {
 private:
-	GameBoard board;
+	std::vector<int> board;
 	int _player1;
 	int _player2;
 	int turnPlayer;
@@ -48,7 +33,7 @@ public:
 
 	// Getters
 	int getTurnPlayer( void );
-	GameBoard getBoard( void );
+	std::vector<int> getBoard( void );
 	std::vector<int> getValidMoves( void );
 	bool isBoardFull( void );
 	int whoWon( void );

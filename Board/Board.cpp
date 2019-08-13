@@ -14,8 +14,8 @@ using namespace std;
 
 // Constructors
 Board::Board( void ) {
-	board.resize(3, vector<int>(3));
-	fill(board.begin(), board.end(), vector<int>(3, 0));
+	board.resize(9);
+	fill(board.begin(), board.end(), 0);
 
 	_player1 = 1;
 	_player2 = -1;
@@ -23,8 +23,8 @@ Board::Board( void ) {
 }
 
 Board::Board(int p1, int p2) {
-	board.resize(3, vector<int>(3));
-	fill(board.begin(), board.end(), vector<int>(3, 0));
+	board.resize(9);
+	fill(board.begin(), board.end(), 0);
 
 	if (p1 != p2 && p1 != 0 && p2 != 0) {
 		_player1 = p1;
@@ -45,10 +45,7 @@ void Board::setTurnPlayer(int player) {
 }
 
 void Board::setMove(int move) {
-	int row = move / 3;
-	int col = move % 3;
-
-	board[row][col] = turnPlayer;
+	board[move] = turnPlayer;
 }
 
 bool Board::addMove(int move) {
@@ -67,14 +64,11 @@ bool Board::addMove(int move) {
 
 // Helpers
 bool Board::checkMoveValid(int move) {
-	int row = move / 3;
-	int col = move % 3;
-
 	if (move < 0 || move > 8) {
 		cout << "Move out of bounds" << endl;
 		return false;
 	}
-	if (board[row][col] != 0) {
+	if (board[move] != 0) {
 		cout << "Spot taken" << endl;
 		return false;
 	}
@@ -98,7 +92,7 @@ int Board::getTurnPlayer( void ) {
 	return turnPlayer;
 }
 
-GameBoard Board::getBoard( void ) {
+vector<int> Board::getBoard( void ) {
 	return board;
 }
 
@@ -114,14 +108,14 @@ vector<int> Board::getValidMoves( void ) {
 	return validMoves;
 }
 
+
+// Food for Thought: rewrite to get valid moves, then see if the length is 0
 bool Board::isBoardFull( void ) {
 	bool isFull = true;
 
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			if (board[i][j] == 0) {
-				isFull = false;
-			}
+	for (int i = 0; i < 9; i++) {
+		if (board[i] == 0) {
+			isFull = false;
 		}
 	}
 
@@ -131,56 +125,40 @@ bool Board::isBoardFull( void ) {
 int Board::whoWon( void ) {
 	// Rows
 	// Top
-	if (board[0][0] == board[0][1] && board[0][1] == board[0][2]) {
-		if (board[0][0] != 0) {
-			return board[0][0];
-		}
+	if (board[0] == board[1] && board[1] == board[2] && board[2] != 0) {
+		return board[0];
 	}
 	// Middle
-	if (board[1][0] == board[1][1] && board[1][1] == board[1][2]) {
-		if (board[1][0] != 0) {
-			return board[1][0];
-		}
+	if (board[3] == board[4] && board[4] == board[5] && board[5] != 0) {
+		return board[3];
 	}
 	// Bottom
-	if (board[2][0] == board[2][1] && board[2][1] == board[2][2]) {
-		if (board[2][0] != 0) {
-			return board[2][0];
-		}
+	if (board[6] == board[7] && board[7] == board[8] && board[8] != 0) {
+		return board[8];
 	}
 
 	// Columns
 	// Left
-	if (board[0][0] == board[1][0] && board[1][0] == board[2][0]) {
-		if (board[0][0] != 0) {
-			return board[0][0];
-		}
+	if (board[0] == board[3] && board[3] == board[6] && board[6] != 0) {
+		return board[6];
 	}
 	// Middle
-	if (board[0][1] == board[1][1] && board[1][1] == board[2][1]) {
-		if (board[0][1] != 0) {
-			return board[0][1];
-		}
+	if (board[1] == board[4] && board[4] == board[7] && board[7] != 0) {
+		return board[7];
 	}
 	// Right
-	if (board[0][2] == board[1][2] && board[1][2] == board[2][2]) {
-		if (board[0][2] != 0) {
-			return board[0][2];
-		}
+	if (board[2] == board[5] && board[5] == board[8] && board[8] != 0) {
+		return board[8];
 	}
 
 	// Diagonals
 	// major
-	if (board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
-		if (board[0][0] != 0) {
-			return board[0][0];
-		}
+	if (board[0] == board[4] && board[4] == board[8] && board[8] != 0) {
+		return board[8];
 	}
 	// minor 
-	if (board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
-		if (board[0][2] != 0) {
-			return board[0][2];
-		}
+	if (board[6] == board[4] && board[4] == board[2] && board[2] != 0) {
+		return board[2];
 	}
 
 	return 0;
@@ -190,10 +168,10 @@ int Board::whoWon( void ) {
 // Printers
 void Board::printBoard( void ) {
 	cout << "----------------" << endl;
-	for (int i = 0; i < board.size(); i++) {
+	for (int i = 0; i < 3; i++) {
 		cout << "|";
-		for (int j = 0; j < board[i].size(); j++) {
-			printf("%3d |", board[i][j]);
+		for (int j = 0; j < 3; j++) {
+			printf("%3d |", board[3*i + j]);
 		}
 		cout << endl;
 		cout << "----------------" << endl;

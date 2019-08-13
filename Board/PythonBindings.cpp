@@ -14,9 +14,6 @@ BOOST_PYTHON_MODULE(Board)
     // May be needed in the future:
     // Py_Initialize();
     // np::initialize();
-
-    class_<GameBoard>("GameBoard")
-        .def(vector_indexing_suite<GameBoard>() );
     
     class_<Board>("Board")
         // Getters
