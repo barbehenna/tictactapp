@@ -76,28 +76,22 @@ GameBoard Board::getBoard( void ) {
 	return board;
 }
 
+// Slightly round-about way to copy game board into numpy array:
+// flatten -> copy -> reshape 
 np::ndarray Board::getBoardnp( void ) {
+	// apparently vectors are stored in sequential memory like arrays now
+	// flatten board 
 	vector<int> resvec(flatten(board));
-	// cout << "resvec vector has size: " << resvec.size() << endl;
 	int* data = &resvec[0];
 
-	// np::dtype dt = np::dtype::get_builtin<int>();
-	// p::tuple shape = p::make_tuple(9);
-	// p::tuple stride = p::make_tuple(9);
-	// p::object own;
-	// np::ndarray data_np = np::from_data(data,dt,shape,stride,own);
-
-	p::tuple outshape = p::make_tuple(3, 3);
-	// np::dtype dtype = np::dtype::get_builtin<int>();
-	// np::ndarray a =  np::zeros(shape, dtype);
-
-
+	// copy board into numpy array
 	Py_intptr_t shape[1] = { static_cast<Py_intptr_t>(resvec.size()) };
-	np::ndarray resnp = np::zeros(1, shape, np::dtype::get_builtin<double>());
-	copy(resvec.begin(), resvec.end(), reinterpret_cast<double*>(resnp.get_data()));
+	np::ndarray resnp = np::zeros(1, shape, np::dtype::get_builtin<int>());
+	copy(resvec.begin(), resvec.end(), reinterpret_cast<int*>(resnp.get_data()));
 	
+	// reshape numpy array
+	p::tuple outshape = p::make_tuple(3, 3);
 	return resnp.reshape(outshape);
-	// return a;
 }
 
 bool Board::isBoardFull( void ) {
