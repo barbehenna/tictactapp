@@ -9,7 +9,7 @@ using namespace std;
 
 
 int main( void ) {
-	Board boardState; 
+	Board boardState(1, -1); 
 	int move=10;
 
 	boardState.printMoveMap();
