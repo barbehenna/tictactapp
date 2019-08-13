@@ -5,6 +5,11 @@
 #ifndef BOARD
 #define BOARD 
 
+// int used for each player. 
+// pick any pair of ints so long as their different and not zero
+#define PLAYER_1 1
+#define PLAYER_2 -1
+
 #include <iostream>
 #include <algorithm> // for std::fill
 #include <vector>
@@ -29,8 +34,6 @@ std::vector<T> flatten(const std::vector<std::vector<T>> &orig) {
 class Board {
 private:
 	GameBoard board;
-	int player1;
-	int player2;
 	int turnPlayer;
 
 	// Hide setters to prevent unchecked changes
@@ -58,6 +61,7 @@ public:
 	// Printers
 	void printBoard( void );
 	void printMoveMap( void );
+	void printPlayerValues( void );
 };
 
 

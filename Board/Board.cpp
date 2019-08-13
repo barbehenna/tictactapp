@@ -8,10 +8,6 @@
 #include <algorithm> // for std::fill
 #include <vector>
 
-// #include <boost/python.hpp>
-// #include <boost/python/numpy.hpp>
-// namespace p = boost::python;
-// namespace np = boost::python::numpy;
 
 using namespace std;
 
@@ -21,11 +17,7 @@ Board::Board( void ) {
 	board.resize(3, vector<int>(3));
 	fill(board.begin(), board.end(), vector<int>(3, 0));
 
-	const int player1 = 1;
-	const int player2 = -1;
-	turnPlayer = player1;
-
-	cout << "Constructor: player1 = " << player1 << " player2 = " << player2 << endl;
+	turnPlayer = PLAYER_1;
 }
 
 
@@ -42,8 +34,6 @@ void Board::setMove(int move) {
 }
 
 bool Board::addMove(int move) {
-	cout << "addMove beginning: player1 = " << player1 << " player2 = " << player2 << endl;
-
 	// check move
 	if (!checkMoveValid(move)) {
 		return false;
@@ -75,14 +65,12 @@ bool Board::checkMoveValid(int move) {
 }
 
 void Board::nextTurn( void ) {
-	cout << "changing turn player from: " << turnPlayer;
-	if (turnPlayer == player1) {
-		setTurnPlayer(player2);
+	if (turnPlayer == PLAYER_1) {
+		setTurnPlayer(PLAYER_2);
 	} 
 	else {
-		setTurnPlayer(player1);
+		setTurnPlayer(PLAYER_1);
 	}
-	cout << " to: " << turnPlayer << endl;
 }
 
 
