@@ -12,14 +12,30 @@
 using namespace std;
 
 
-// Constructor
+// Constructors
 Board::Board( void ) {
 	board.resize(3, vector<int>(3));
 	fill(board.begin(), board.end(), vector<int>(3, 0));
 
-	player1 = 1;
-	player2 = -1;
-	turnPlayer = player1;
+	_player1 = 1;
+	_player2 = -1;
+	turnPlayer = _player1;
+}
+
+Board::Board(int p1, int p2) {
+	board.resize(3, vector<int>(3));
+	fill(board.begin(), board.end(), vector<int>(3, 0));
+
+	if (p1 != p2 && p1 != 0 && p2 != 0) {
+		_player1 = p1;
+		_player2 = p2;		
+	}
+	else {
+		_player1 = 1;
+		_player2 = -1;
+	}
+
+	turnPlayer = _player1;
 }
 
 
@@ -67,11 +83,11 @@ bool Board::checkMoveValid(int move) {
 }
 
 void Board::nextTurn( void ) {
-	if (turnPlayer == player1) {
-		setTurnPlayer(player2);
+	if (turnPlayer == _player1) {
+		setTurnPlayer(_player2);
 	} 
 	else {
-		setTurnPlayer(player1);
+		setTurnPlayer(_player1);
 	}
 }
 

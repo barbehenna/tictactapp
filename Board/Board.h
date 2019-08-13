@@ -29,8 +29,8 @@ std::vector<T> flatten(const std::vector<std::vector<T>> &orig) {
 class Board {
 private:
 	GameBoard board;
-	int player1;
-	int player2;
+	int _player1;
+	int _player2;
 	int turnPlayer;
 
 	// Hide setters to prevent unchecked changes
@@ -42,8 +42,9 @@ private:
 	bool checkMoveValid(int move);
 
 public:
-	// Constructor
+	// Constructors
 	Board( void );
+	Board(int p1, int p2); // set player integers
 
 	// Getters
 	int getTurnPlayer( void );
