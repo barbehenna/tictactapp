@@ -13,22 +13,23 @@ BOOST_PYTHON_MODULE(Board)
     // probably helps more too.
     // May be needed in the future:
     // Py_Initialize();
-    np::initialize();
+    // np::initialize();
 
     class_<GameBoard>("GameBoard")
         .def(vector_indexing_suite<GameBoard>() );
     
     class_<Board>("Board")
-        .def("checkMoveValid", &Board::checkMoveValid)
-        .def("addMove", &Board::addMove)
-        .def("getValidMoves", &Board::getValidMoves)
-        .def("getValidMovesnp", &Board::getValidMovesnp)
-        .def("nextTurn", &Board::nextTurn)
-        .def("getTurn", &Board::getTurn)
+        // Getters
+        .def("getTurnPlayer", &Board::getTurnPlayer)
         .def("getBoard", &Board::getBoard)
-        .def("getBoardnp", &Board::getBoardnp)
-        .def("whoWon", &Board::whoWon)
+        .def("getValidMoves", &Board::getValidMoves)
         .def("isBoardFull", &Board::isBoardFull)
+        .def("whoWon", &Board::whoWon)
+
+        // Setter
+        .def("addMove", &Board::addMove)
+
+        // Printers
         .def("printBoard", &Board::printBoard)
         .def("printMoveMap", &Board::printMoveMap)
     ;

@@ -8,32 +8,54 @@
 #include <iostream>
 #include <algorithm> // for std::fill
 #include <vector>
-#include <boost/python/numpy.hpp>
-
-namespace np = boost::python::numpy;
 
 
 typedef std::vector<std::vector<int> > GameBoard;
+
+
+// Helper function
+// Converts 2d vectors to 1d vectors 
+// Found on Stack Overflow
+template<typename T>
+std::vector<T> flatten(const std::vector<std::vector<T>> &orig) {
+	std::vector<T> ret;
+	for(const auto &v: orig)
+		ret.insert(ret.end(), v.begin(), v.end());
+	return ret;
+} 
 
 
 // This class maintains the board state throughout the game.
 class Board {
 private:
 	GameBoard board;
-	int turn;
+	int player1;
+	int player2;
+	int turnPlayer;
+
+	// Hide setters to prevent unchecked changes
+	void setTurnPlayer(int player);
+	void setMove(int move);
+
+	// Helpers (no need to clutter public space)
+	void nextTurn( void );
+	bool checkMoveValid(int move);
 
 public:
+	// Constructor
 	Board( void );
-	bool checkMoveValid(int player, int move);
-	int addMove(int player, int move);
-	std::vector<int> getValidMoves( void );
-	np::ndarray getValidMovesnp( void );
-	void nextTurn( void );
-	int getTurn( void );
+
+	// Getters
+	int getTurnPlayer( void );
 	GameBoard getBoard( void );
-	np::ndarray getBoardnp( void );
-	int whoWon( void );
+	std::vector<int> getValidMoves( void );
 	bool isBoardFull( void );
+	int whoWon( void );
+
+	// public setter
+	bool addMove(int move);
+
+	// Printers
 	void printBoard( void );
 	void printMoveMap( void );
 };

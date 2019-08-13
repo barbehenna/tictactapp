@@ -8,40 +8,61 @@
 #include <algorithm> // for std::fill
 #include <vector>
 
-#include <boost/python.hpp>
-#include <boost/python/numpy.hpp>
-namespace p = boost::python;
-namespace np = boost::python::numpy;
+// #include <boost/python.hpp>
+// #include <boost/python/numpy.hpp>
+// namespace p = boost::python;
+// namespace np = boost::python::numpy;
 
 using namespace std;
 
 
-template<typename T>
-std::vector<T> flatten(const std::vector<std::vector<T>> &orig)
-{   
-	std::vector<T> ret;
-	for(const auto &v: orig)
-		ret.insert(ret.end(), v.begin(), v.end());                                                                                         
-	return ret;
-} 
-
-
+// Constructor
 Board::Board( void ) {
 	board.resize(3, vector<int>(3));
 	fill(board.begin(), board.end(), vector<int>(3, 0));
-	turn = 1;
+
+	const int player1 = 1;
+	const int player2 = -1;
+	turnPlayer = player1;
+
+	cout << "Constructor: player1 = " << player1 << " player2 = " << player2 << endl;
 }
 
-bool Board::checkMoveValid(int player, int move) {
-	// check move
+
+// Setters
+void Board::setTurnPlayer(int player) {
+	turnPlayer = player;
+}
+
+void Board::setMove(int move) {
 	int row = move / 3;
 	int col = move % 3;
 
-	if (row >= 3 || row < 0) {
-		cout << "Move out of bounds" << endl;
+	board[row][col] = turnPlayer;
+}
+
+bool Board::addMove(int move) {
+	cout << "addMove beginning: player1 = " << player1 << " player2 = " << player2 << endl;
+
+	// check move
+	if (!checkMoveValid(move)) {
 		return false;
 	}
-	if (col >= 3 || col < 0) {
+	else {
+		// Set move and then change turn
+		setMove(move);
+		nextTurn();
+		return true;
+	}
+}
+
+
+// Helpers
+bool Board::checkMoveValid(int move) {
+	int row = move / 3;
+	int col = move % 3;
+
+	if (move < 0 || move > 8) {
 		cout << "Move out of bounds" << endl;
 		return false;
 	}
@@ -50,79 +71,41 @@ bool Board::checkMoveValid(int player, int move) {
 		return false;
 	}
 
-	// check player 
-	if (player != turn) {
-		return false;
-	}
-
 	return true;
 }
 
-vector<int> Board::getValidMoves( void ) {
-	vector<int> validMoves;
-
-	for (int i = 0; i < 9; i++) {
-		if (checkMoveValid(turn, i)) {
-			validMoves.push_back(i);
-		}
-	}
-
-	return validMoves;
-}
-
-np::ndarray Board::getValidMovesnp( void ) {
-	vector<int> moves = getValidMoves();
-	int* data = &moves[0];
-
-	// copy board into numpy array
-	Py_intptr_t shape[1] = { static_cast<Py_intptr_t>(moves.size()) };
-	np::ndarray resnp = np::zeros(1, shape, np::dtype::get_builtin<int>());
-	copy(moves.begin(), moves.end(), reinterpret_cast<int*>(resnp.get_data()));
-	
-	return resnp;
-}
-
-int Board::addMove(int player, int move) {
-	int row = move / 3;
-	int col = move % 3;
-
-	board[row][col] = player;
-	return player;
-}
-
 void Board::nextTurn( void ) {
-	if (turn == 1) {
-		turn = -1;
-	}
+	cout << "changing turn player from: " << turnPlayer;
+	if (turnPlayer == player1) {
+		setTurnPlayer(player2);
+	} 
 	else {
-		turn = 1;
+		setTurnPlayer(player1);
 	}
+	cout << " to: " << turnPlayer << endl;
 }
 
-int Board::getTurn( void ) {
-	return turn;
+
+// Getters
+
+int Board::getTurnPlayer( void ) {
+	return turnPlayer;
 }
 
 GameBoard Board::getBoard( void ) {
 	return board;
 }
 
-// Slightly round-about way to copy game board into numpy array:
-// flatten -> copy -> reshape 
-np::ndarray Board::getBoardnp( void ) {
-	// apparently vectors are stored in sequential memory like arrays now
-	// flatten board 
-	vector<int> resvec(flatten(board));
-	int* data = &resvec[0];
+vector<int> Board::getValidMoves( void ) {
+	vector<int> validMoves;
 
-	// copy board into numpy array
-	Py_intptr_t shape[1] = { static_cast<Py_intptr_t>(resvec.size()) };
-	np::ndarray resnp = np::zeros(1, shape, np::dtype::get_builtin<int>());
-	copy(resvec.begin(), resvec.end(), reinterpret_cast<int*>(resnp.get_data()));
-	
-	// reshape numpy array
-	p::tuple outshape = p::make_tuple(3, 3);
-	return resnp.reshape(outshape);
+	for (int i = 0; i < 9; i++) {
+		if (checkMoveValid(i)) {
+			validMoves.push_back(i);
+		}
+	}
+
+	return validMoves;
 }
 
 bool Board::isBoardFull( void ) {
@@ -191,6 +174,8 @@ int Board::whoWon( void ) {
 	return 0;
 }
 
+
+// Printers
 void Board::printBoard( void ) {
 	cout << "----------------" << endl;
 	for (int i = 0; i < board.size(); i++) {
@@ -216,4 +201,3 @@ void Board::printMoveMap( void ) {
 	
 	cout << "Good luck!" << endl;
 }
-

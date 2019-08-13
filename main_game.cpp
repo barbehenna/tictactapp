@@ -10,29 +10,27 @@ using namespace std;
 
 int main( void ) {
 	Board boardState; 
-	int move = -1;
+	int move=10;
 
 	boardState.printMoveMap();
 
 	while (!boardState.isBoardFull() && !boardState.whoWon()) {
-		cout << "Player " << boardState.getTurn() << "'s turn:" << endl;
+		cout << "Player " << boardState.getTurnPlayer() << "'s turn:" << endl;
 		boardState.printBoard();
 
 		do {
 			cin >> move;
-		} while (!boardState.checkMoveValid(boardState.getTurn(), move));
-
-		boardState.addMove(boardState.getTurn(), move);
-
-		boardState.nextTurn();
+		} while (!boardState.addMove(move));
 	}
 
 	if (boardState.whoWon() != 0) {
-		boardState.nextTurn();
-		cout << "Player " << boardState.getTurn() << " won!!" << endl;
+		cout << "Player " << boardState.getTurnPlayer() << " won!!" << endl;
 	}
-	else if (boardState.isBoardFull() != 0) {
+	else if (boardState.isBoardFull()) {
 		cout << "Stalemate..." << endl;
+	}
+	else {
+		cout << "ERROR: uncaught win condition" << endl;
 	}
 
 	cout << "Last board:" << endl;
