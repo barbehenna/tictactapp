@@ -17,7 +17,9 @@ Board::Board( void ) {
 	board.resize(3, vector<int>(3));
 	fill(board.begin(), board.end(), vector<int>(3, 0));
 
-	turnPlayer = PLAYER_1;
+	player1 = 1;
+	player2 = -1;
+	turnPlayer = player1;
 }
 
 
@@ -65,11 +67,11 @@ bool Board::checkMoveValid(int move) {
 }
 
 void Board::nextTurn( void ) {
-	if (turnPlayer == PLAYER_1) {
-		setTurnPlayer(PLAYER_2);
+	if (turnPlayer == player1) {
+		setTurnPlayer(player2);
 	} 
 	else {
-		setTurnPlayer(PLAYER_1);
+		setTurnPlayer(player1);
 	}
 }
 
