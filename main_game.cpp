@@ -24,7 +24,7 @@ int main( void ) {
 	}
 
 	if (boardState.whoWon() != 0) {
-		cout << "Player " << boardState.getTurnPlayer() << " won!!" << endl;
+		cout << "Player " << boardState.whoWon() << " won!!" << endl;
 	}
 	else if (boardState.isBoardFull()) {
 		cout << "Stalemate..." << endl;
