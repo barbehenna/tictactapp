@@ -58,6 +58,30 @@ bool Board::checkMoveValid(int player, int move) {
 	return true;
 }
 
+vector<int> Board::getValidMoves( void ) {
+	vector<int> validMoves;
+
+	for (int i = 0; i < 9; i++) {
+		if (checkMoveValid(turn, i)) {
+			validMoves.push_back(i);
+		}
+	}
+
+	return validMoves;
+}
+
+np::ndarray Board::getValidMovesnp( void ) {
+	vector<int> moves = getValidMoves();
+	int* data = &moves[0];
+
+	// copy board into numpy array
+	Py_intptr_t shape[1] = { static_cast<Py_intptr_t>(moves.size()) };
+	np::ndarray resnp = np::zeros(1, shape, np::dtype::get_builtin<int>());
+	copy(moves.begin(), moves.end(), reinterpret_cast<int*>(resnp.get_data()));
+	
+	return resnp;
+}
+
 int Board::addMove(int player, int move) {
 	int row = move / 3;
 	int col = move % 3;

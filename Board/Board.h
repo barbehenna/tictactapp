@@ -26,6 +26,8 @@ public:
 	Board( void );
 	bool checkMoveValid(int player, int move);
 	int addMove(int player, int move);
+	std::vector<int> getValidMoves( void );
+	np::ndarray getValidMovesnp( void );
 	void nextTurn( void );
 	int getTurn( void );
 	GameBoard getBoard( void );
