@@ -29,5 +29,6 @@ BOOST_PYTHON_MODULE(Board)
         .def("whoWon", &Board::whoWon)
         .def("isBoardFull", &Board::isBoardFull)
         .def("printBoard", &Board::printBoard)
+        .def("printMoveMap", &Board::printMoveMap)
     ;
 }

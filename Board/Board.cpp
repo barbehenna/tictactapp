@@ -32,7 +32,10 @@ Board::Board( void ) {
 	turn = 1;
 }
 
-bool Board::checkMoveValid(int player, int row, int col) {
+bool Board::checkMoveValid(int player, int move) {
+	int row = move / 3;
+	int col = move % 3;
+
 	if (row >= 3 || row < 0) {
 		cout << "Move out of bounds" << endl;
 		return false;
@@ -48,14 +51,17 @@ bool Board::checkMoveValid(int player, int row, int col) {
 	return true;
 }
 
-int Board::addMove(int player, int row, int col) {
+int Board::addMove(int player, int move) {
+	int row = move / 3;
+	int col = move % 3;
+
 	board[row][col] = player;
 	return player;
 }
 
 void Board::nextTurn( void ) {
 	if (turn == 1) {
-		turn = 2;
+		turn = -1;
 	}
 	else {
 		turn = 1;
@@ -161,11 +167,28 @@ int Board::whoWon( void ) {
 }
 
 void Board::printBoard( void ) {
+	cout << "----------------" << endl;
 	for (int i = 0; i < board.size(); i++) {
+		cout << "|";
 		for (int j = 0; j < board[i].size(); j++) {
-			cout << board[i][j] << ' ';
+			printf("%3d |", board[i][j]);
 		}
 		cout << endl;
+		cout << "----------------" << endl;
 	}
+}
+
+void Board::printMoveMap( void ) {
+	cout << "Here are the possible move entries:" << endl;
+
+	cout << "----------------" << endl;
+	cout << "|  0 |  1 |  2 |" << endl;
+	cout << "----------------" << endl;
+	cout << "|  3 |  4 |  5 |" << endl;
+	cout << "----------------" << endl;
+	cout << "|  6 |  7 |  8 |" << endl;
+	cout << "----------------" << endl;
+	
+	cout << "Good luck!" << endl;
 }
 

@@ -24,8 +24,8 @@ private:
 
 public:
 	Board( void );
-	bool checkMoveValid(int player, int row, int col);
-	int addMove(int player, int row, int col);
+	bool checkMoveValid(int player, int move);
+	int addMove(int player, int move);
 	void nextTurn( void );
 	int getTurn( void );
 	GameBoard getBoard( void );
@@ -33,6 +33,7 @@ public:
 	int whoWon( void );
 	bool isBoardFull( void );
 	void printBoard( void );
+	void printMoveMap( void );
 };
 
 

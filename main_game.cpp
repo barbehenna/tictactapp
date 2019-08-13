@@ -10,19 +10,19 @@ using namespace std;
 
 int main( void ) {
 	Board boardState; 
-	int x = -1;
-	int y = -1;
+	int move = -1;
+
+	boardState.printMoveMap();
 
 	while (!boardState.isBoardFull() && !boardState.whoWon()) {
 		cout << "Player " << boardState.getTurn() << "'s turn:" << endl;
 		boardState.printBoard();
 
 		do {
-			cin >> x;
-			cin >> y;
-		} while (!boardState.checkMoveValid(boardState.getTurn(), x, y));
+			cin >> move;
+		} while (!boardState.checkMoveValid(boardState.getTurn(), move));
 
-		boardState.addMove(boardState.getTurn(), x, y);
+		boardState.addMove(boardState.getTurn(), move);
 
 		boardState.nextTurn();
 	}
