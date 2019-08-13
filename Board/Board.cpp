@@ -33,6 +33,7 @@ Board::Board( void ) {
 }
 
 bool Board::checkMoveValid(int player, int move) {
+	// check move
 	int row = move / 3;
 	int col = move % 3;
 
@@ -48,6 +49,12 @@ bool Board::checkMoveValid(int player, int move) {
 		cout << "Spot taken" << endl;
 		return false;
 	}
+
+	// check player 
+	if (player != turn) {
+		return false;
+	}
+
 	return true;
 }
 
