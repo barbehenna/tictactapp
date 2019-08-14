@@ -1,8 +1,10 @@
 #include "Board.h"
+#include <vector>
 #include <boost/python.hpp>
-#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+#include <boost/python/numpy.hpp>
 
 using namespace boost::python;
+namespace np = boost::python::numpy;
 
 
 // Define python module
@@ -14,21 +16,22 @@ BOOST_PYTHON_MODULE(Board)
     // May be needed in the future:
     // Py_Initialize();
     np::initialize();
-
-    class_<GameBoard>("GameBoard")
-        .def(vector_indexing_suite<GameBoard>() );
     
     class_<Board>("Board")
-        .def("checkMoveValid", &Board::checkMoveValid)
-        .def("addMove", &Board::addMove)
-        .def("getValidMoves", &Board::getValidMoves)
-        .def("getValidMovesnp", &Board::getValidMovesnp)
-        .def("nextTurn", &Board::nextTurn)
-        .def("getTurn", &Board::getTurn)
-        .def("getBoard", &Board::getBoard)
-        .def("getBoardnp", &Board::getBoardnp)
-        .def("whoWon", &Board::whoWon)
+        // Additional Constructor
+        .def(init<int, int>())
+
+        // Getters
+        .def("getTurnPlayer", &Board::getTurnPlayer)
+        .def("getBoard", &Board::getBoardNumpy)
+        .def("getValidMoves", &Board::getValidMovesNumpy)
         .def("isBoardFull", &Board::isBoardFull)
+        .def("whoWon", &Board::whoWon)
+
+        // Setter
+        .def("addMove", &Board::addMove)
+
+        // Printers
         .def("printBoard", &Board::printBoard)
         .def("printMoveMap", &Board::printMoveMap)
     ;

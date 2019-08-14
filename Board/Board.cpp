@@ -16,53 +16,111 @@ namespace np = boost::python::numpy;
 using namespace std;
 
 
-template<typename T>
-std::vector<T> flatten(const std::vector<std::vector<T>> &orig)
-{   
-	std::vector<T> ret;
-	for(const auto &v: orig)
-		ret.insert(ret.end(), v.begin(), v.end());                                                                                         
-	return ret;
-} 
-
-
+// Constructors
 Board::Board( void ) {
-	board.resize(3, vector<int>(3));
-	fill(board.begin(), board.end(), vector<int>(3, 0));
-	turn = 1;
+	board.resize(9);
+	fill(board.begin(), board.end(), 0);
+
+	_player1 = 1;
+	_player2 = -1;
+	turnPlayer = _player1;
 }
 
-bool Board::checkMoveValid(int player, int move) {
+Board::Board(int p1, int p2) {
+	board.resize(9);
+	fill(board.begin(), board.end(), 0);
+
+	if (p1 != p2 && p1 != 0 && p2 != 0) {
+		_player1 = p1;
+		_player2 = p2;		
+	}
+	else {
+		_player1 = 1;
+		_player2 = -1;
+	}
+
+	turnPlayer = _player1;
+}
+
+
+// Setters
+void Board::setTurnPlayer(int player) {
+	turnPlayer = player;
+}
+
+void Board::setMove(int move) {
+	board[move] = turnPlayer;
+}
+
+bool Board::addMove(int move) {
 	// check move
-	int row = move / 3;
-	int col = move % 3;
+	if (!checkMoveValid(move)) {
+		return false;
+	}
+	else {
+		// Set move and then change turn
+		setMove(move);
+		nextTurn();
+		return true;
+	}
+}
 
-	if (row >= 3 || row < 0) {
+
+// Helpers
+bool Board::checkMoveValid(int move) {
+	if (move < 0 || move > 8) {
 		cout << "Move out of bounds" << endl;
 		return false;
 	}
-	if (col >= 3 || col < 0) {
-		cout << "Move out of bounds" << endl;
-		return false;
-	}
-	if (board[row][col] != 0) {
+	if (board[move] != 0) {
 		cout << "Spot taken" << endl;
-		return false;
-	}
-
-	// check player 
-	if (player != turn) {
 		return false;
 	}
 
 	return true;
 }
 
+void Board::nextTurn( void ) {
+	if (turnPlayer == _player1) {
+		setTurnPlayer(_player2);
+	} 
+	else {
+		setTurnPlayer(_player1);
+	}
+}
+
+np::ndarray Board::vecToNumpy(std::vector<int> input) {
+    int* data = &input[0];
+
+    // copy board into numpy array
+    Py_intptr_t shape[1] = { static_cast<Py_intptr_t>(input.size()) };
+    np::ndarray res = np::zeros(1, shape, np::dtype::get_builtin<int>());
+    copy(input.begin(), input.end(), reinterpret_cast<int*>(res.get_data()));
+    
+    return res; // 1d output
+}
+
+
+// Getters
+int Board::getTurnPlayer( void ) {
+	return turnPlayer;
+}
+
+vector<int> Board::getBoard( void ) {
+	return board;
+}
+
+np::ndarray Board::getBoardNumpy( void ) {
+	p::tuple shape = p::make_tuple(3, 3); 
+	np::ndarray numpyBoard = vecToNumpy(getBoard());
+	return numpyBoard.reshape(shape); // return as a 3x3 array
+}
+
 vector<int> Board::getValidMoves( void ) {
 	vector<int> validMoves;
 
 	for (int i = 0; i < 9; i++) {
-		if (checkMoveValid(turn, i)) {
+		if (checkMoveValid(i)) {
 			validMoves.push_back(i);
 		}
 	}
@@ -70,69 +128,16 @@ vector<int> Board::getValidMoves( void ) {
 	return validMoves;
 }
 
-np::ndarray Board::getValidMovesnp( void ) {
-	vector<int> moves = getValidMoves();
-	int* data = &moves[0];
-
-	// copy board into numpy array
-	Py_intptr_t shape[1] = { static_cast<Py_intptr_t>(moves.size()) };
-	np::ndarray resnp = np::zeros(1, shape, np::dtype::get_builtin<int>());
-	copy(moves.begin(), moves.end(), reinterpret_cast<int*>(resnp.get_data()));
-	
-	return resnp;
-}
-
-int Board::addMove(int player, int move) {
-	int row = move / 3;
-	int col = move % 3;
-
-	board[row][col] = player;
-	return player;
-}
-
-void Board::nextTurn( void ) {
-	if (turn == 1) {
-		turn = -1;
-	}
-	else {
-		turn = 1;
-	}
-}
-
-int Board::getTurn( void ) {
-	return turn;
-}
-
-GameBoard Board::getBoard( void ) {
-	return board;
-}
-
-// Slightly round-about way to copy game board into numpy array:
-// flatten -> copy -> reshape 
-np::ndarray Board::getBoardnp( void ) {
-	// apparently vectors are stored in sequential memory like arrays now
-	// flatten board 
-	vector<int> resvec(flatten(board));
-	int* data = &resvec[0];
-
-	// copy board into numpy array
-	Py_intptr_t shape[1] = { static_cast<Py_intptr_t>(resvec.size()) };
-	np::ndarray resnp = np::zeros(1, shape, np::dtype::get_builtin<int>());
-	copy(resvec.begin(), resvec.end(), reinterpret_cast<int*>(resnp.get_data()));
-	
-	// reshape numpy array
-	p::tuple outshape = p::make_tuple(3, 3);
-	return resnp.reshape(outshape);
+np::ndarray Board::getValidMovesNumpy( void ) {
+	return vecToNumpy(getValidMoves());
 }
 
 bool Board::isBoardFull( void ) {
 	bool isFull = true;
 
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			if (board[i][j] == 0) {
-				isFull = false;
-			}
+	for (int i = 0; i < 9; i++) {
+		if (board[i] == 0) {
+			isFull = false;
 		}
 	}
 
@@ -140,63 +145,55 @@ bool Board::isBoardFull( void ) {
 }
 
 int Board::whoWon( void ) {
-	if (board[0][0] == board[0][1] && board[0][1] == board[0][2]) {
-		if (board[0][0] != 0) {
-			return board[0][0];
-		}
+	// Rows
+	// Top
+	if (board[0] == board[1] && board[1] == board[2] && board[2] != 0) {
+		return board[0];
+	}
+	// Middle
+	if (board[3] == board[4] && board[4] == board[5] && board[5] != 0) {
+		return board[3];
+	}
+	// Bottom
+	if (board[6] == board[7] && board[7] == board[8] && board[8] != 0) {
+		return board[8];
 	}
 
-	else if (board[1][0] == board[1][1] && board[1][1] == board[1][2]) {
-		if (board[1][0] != 0) {
-			return board[1][0];
-		}
+	// Columns
+	// Left
+	if (board[0] == board[3] && board[3] == board[6] && board[6] != 0) {
+		return board[6];
+	}
+	// Middle
+	if (board[1] == board[4] && board[4] == board[7] && board[7] != 0) {
+		return board[7];
+	}
+	// Right
+	if (board[2] == board[5] && board[5] == board[8] && board[8] != 0) {
+		return board[8];
 	}
 
-	else if (board[2][0] == board[2][1] && board[2][1] == board[2][2]) {
-		if (board[2][0] != 0) {
-			return board[2][0];
-		}
+	// Diagonals
+	// major
+	if (board[0] == board[4] && board[4] == board[8] && board[8] != 0) {
+		return board[8];
 	}
-
-	else if (board[0][0] == board[1][0] && board[1][0] == board[2][0]) {
-		if (board[0][0] != 0) {
-			return board[0][0];
-		}
-	}
-
-	else if (board[0][1] == board[1][1] && board[1][1] == board[2][1]) {
-		if (board[0][1] != 0) {
-			return board[0][1];
-		}
-	}
-
-	else if (board[0][2] == board[1][2] && board[1][2] == board[2][2]) {
-		if (board[0][2] != 0) {
-			return board[0][2];
-		}
-	}
-
-	else if (board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
-		if (board[0][0] != 0) {
-			return board[0][0];
-		}
-	}
-
-	else if (board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
-		if (board[0][2] != 0) {
-			return board[0][2];
-		}
+	// minor 
+	if (board[6] == board[4] && board[4] == board[2] && board[2] != 0) {
+		return board[2];
 	}
 
 	return 0;
 }
 
+
+// Printers
 void Board::printBoard( void ) {
 	cout << "----------------" << endl;
-	for (int i = 0; i < board.size(); i++) {
+	for (int i = 0; i < 3; i++) {
 		cout << "|";
-		for (int j = 0; j < board[i].size(); j++) {
-			printf("%3d |", board[i][j]);
+		for (int j = 0; j < 3; j++) {
+			printf("%3d |", board[3*i + j]);
 		}
 		cout << endl;
 		cout << "----------------" << endl;
@@ -216,4 +213,3 @@ void Board::printMoveMap( void ) {
 	
 	cout << "Good luck!" << endl;
 }
-
