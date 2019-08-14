@@ -47,6 +47,6 @@ target_include_directories(Board PRIVATE ${PYTHON_INCLUDE_DIRS})
 
 add_executable(tictac_app ${BOARD_FILES} main_game.cpp)
 
-# target_link_libraries(tictac_app ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
-# target_include_directories(tictac_app PRIVATE ${PYTHON_INCLUDE_DIRS})
+target_link_libraries(tictac_app ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
+target_include_directories(tictac_app PRIVATE ${PYTHON_INCLUDE_DIRS})
 

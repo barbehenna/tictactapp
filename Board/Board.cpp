@@ -8,6 +8,10 @@
 #include <algorithm> // for std::fill
 #include <vector>
 
+#include <boost/python.hpp>
+#include <boost/python/numpy.hpp>
+namespace p = boost::python;
+namespace np = boost::python::numpy;
 
 using namespace std;
 
@@ -85,15 +89,31 @@ void Board::nextTurn( void ) {
 	}
 }
 
+np::ndarray Board::vecToNumpy(std::vector<int> input) {
+    int* data = &input[0];
+
+    // copy board into numpy array
+    Py_intptr_t shape[1] = { static_cast<Py_intptr_t>(input.size()) };
+    np::ndarray res = np::zeros(1, shape, np::dtype::get_builtin<int>());
+    copy(input.begin(), input.end(), reinterpret_cast<int*>(res.get_data()));
+    
+    return res; // 1d output
+}
+
 
 // Getters
-
 int Board::getTurnPlayer( void ) {
 	return turnPlayer;
 }
 
 vector<int> Board::getBoard( void ) {
 	return board;
+}
+
+np::ndarray Board::getBoardNumpy( void ) {
+	p::tuple shape = p::make_tuple(3, 3); 
+	np::ndarray numpyBoard = vecToNumpy(getBoard());
+	return numpyBoard.reshape(shape); // return as a 3x3 array
 }
 
 vector<int> Board::getValidMoves( void ) {
@@ -108,8 +128,10 @@ vector<int> Board::getValidMoves( void ) {
 	return validMoves;
 }
 
+np::ndarray Board::getValidMovesNumpy( void ) {
+	return vecToNumpy(getValidMoves());
+}
 
-// Food for Thought: rewrite to get valid moves, then see if the length is 0
 bool Board::isBoardFull( void ) {
 	bool isFull = true;
 

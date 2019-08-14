@@ -9,6 +9,11 @@
 #include <algorithm> // for std::fill
 #include <vector>
 
+#include <boost/python.hpp>
+#include <boost/python/numpy.hpp>
+namespace p = boost::python;
+namespace np = boost::python::numpy;
+
 
 // This class maintains the board state throughout the game.
 class Board {
@@ -25,6 +30,7 @@ private:
 	// Helpers (no need to clutter public space)
 	void nextTurn( void );
 	bool checkMoveValid(int move);
+	np::ndarray vecToNumpy(std::vector<int> input);
 
 public:
 	// Constructors
@@ -37,6 +43,10 @@ public:
 	std::vector<int> getValidMoves( void );
 	bool isBoardFull( void );
 	int whoWon( void );
+
+	// Numpy versions of vector getters
+	np::ndarray getBoardNumpy( void );
+	np::ndarray getValidMovesNumpy( void );
 
 	// public setter
 	bool addMove(int move);
