@@ -23,3 +23,11 @@ These tools are subject to change as I continue the project.
 
 Because of the libraries available and for development speed, I'm changing gears to training in Python. I am using the Boost.Python library to allow the game to be accessed from Python. I plan to start training with Tensorflow 2.0 and Keras. The binary being built of just the Board class files should still be usable in Julia 1.1, should I switch back.  
 
+## Resources
+
+A large part of the python code for performing Q learning was implemented using https://github.com/giladariel/TicTacToe_RL as a guide. 
+
+Additionally, here are a few other resources: 
+
+- Good text on Reinforcement Learning http://incompleteideas.net/book/RLbook2018.pdf
+- Promising tutorial https://towardsdatascience.com/cartpole-introduction-to-reinforcement-learning-ed0eb5b58288
